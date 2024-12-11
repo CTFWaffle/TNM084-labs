@@ -91,7 +91,6 @@ void init(void)
 	// two vertex buffer objects, used for uploading the
 //	unsigned int vertexBufferObjID;
 //	unsigned int texBufferObjID;
-
 	// GL inits
 	glClearColor(0.2,0.2,0.5,0);
 	glEnable(GL_DEPTH_TEST);
@@ -145,8 +144,10 @@ void display(void)
 
 	// clear the screen
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	time = glutGet(GLUT_ELAPSED_TIME) / 10.0;
+	//Added Time variable, divide by 100, send into shader
+	time = glutGet(GLUT_ELAPSED_TIME ) / 100;
 	glUniform1f(glGetUniformLocation(program, "time"), time);
+
 	DrawModel(quad, program, "in_Position", NULL, "in_TexCoord");
 
 	printError("display");
@@ -156,7 +157,7 @@ void display(void)
 
 int main(int argc, char *argv[])
 {
-    glutRepeatingTimer(10);
+    glutRepeatingTimer(10); //Update time variable
 	glutInit(&argc, argv);
 	glutInitContextVersion(3, 2);
 	glutInitWindowSize(kTextureSize, kTextureSize);

@@ -12,8 +12,6 @@ uniform int displayGPUversion;
 uniform float ringDensity;
 uniform float time;
 
-//const float ringDensity = 10.0;
-
 vec2 random2(vec2 st)
 {
     st = vec2( dot(st,vec2(127.1,311.7)),
@@ -83,39 +81,39 @@ void main(void)
 	{
         
 		vec2 f = texCoord * 2.0 - vec2(1.0);
+        float temp = f.x;
 		float radius = length(f); // Same as sqrt(fx*fx + fy * fy);
+        
         //Animated texture
-        out_Color = texture(tex, texCoord + vec2(fract(sin(time)),fract(sin(time))));
-        
+        //out_Color= vec4(hash3(texCoord)/sin(time*noise(texCoord)), 1.0);
+        //out_Color= texture(tex,texCoord)*vec4(sin(time*noise(texCoord)),tan(time*noise(texCoord)),cos(time*noise(texCoord)), 1.0*fract(sin(0.1*time)));
+        out_Color= vec4(sin(time*noise(f*time)),tan(time/noise(f*time)),cos(time*noise(f*time)), 1.0-fract(sin(0.1*time)));
+        //out_Color+=vec4(time,0.5*time,0,0);
         //Random noise applications
-        //out_Color= vec4(fract(hash3(texCoord)*sin(time*noise(texCoord))), 1.0);
+        //out_Color = texture(tex,texCoord)*vec4(random2(texCoord),iqnoise(texCoord, time, 0.9), 1.0);
         //out_Color = vec4(random2(texCoord),iqnoise(texCoord, time, 0.9), 1.0);
-        //out_Color = vec4(iqnoise(texCoord, 1.0, 0.0),0.0, 0.0, 1.0);
         
-        //Brick pattern from lec1, increased brick count/lowered density, changed brick shape slightly+color
-        /*
+        //Brick pattern from lec1, increased brick count/lowered density, changed brick shape slightly+color and background
+       /*
         float xx, yy;
         float x = texCoord.s;
         float y = texCoord.t;
         float density = 10.0 / 256.0;
         xx = fract(x / 2 / density + trunc(y / density)/2); // Affect x by y
         yy = fract(y / density);
-        out_Color = vec4(0.6, 0.6, fract(sin(time))+0.5, 1.0); //Background
+        out_Color = vec4(0.6, 0.6, fract(sin(temp)), 1.0); //Background
         
         if ((xx > 0.1) && (xx < 0.55) && (yy > 0.15) && (yy < 0.9)) //Make shadow
         out_Color = vec4(0.4, 0.4, 0.4, 1);
-        if ((xx > 0.05) && (xx < 0.5) && (yy > 0.0) && (yy < 0.6)) //Brick
+        if ((xx > 0.05) && (xx < 0.5) && (yy > 0.0) && (yy < 0.8)) //Brick
         out_Color = vec4(0.3, 0.7, 0, 1);
         */
         /*
         Modified pattern, Added noise to green and red channel
         */
-        /*
-        out_Color = vec4(fract(cos(radius*time) * sin(ringDensity+time)), 
-                        fract(cos(radius*time) / (sin(ringDensity*time)+noise(texCoord))), 
-                        fract(cos(radius+time)*sin(time*noise(texCoord))), 1.0);
-        */
-        //Original pattern
+        //out_Color = vec4(fract(cos(radius*temp) * sin(ringDensity+temp)), fract(cos(radius*temp) / (sin(ringDensity*temp)+noise(texCoord))), fract(cos(radius+temp)*sin(temp*noise(texCoord))), 1.0);
+        
+        //Original pattern lightly tweaked
 		//out_Color = vec4(sin(radius * ringDensity)/ 2.0 + 0.5, 0.5, cos(radius * ringDensity)* 2.0 + 0.5, 1.0);
 	}
 	else
